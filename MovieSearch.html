@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <link rel="stylesheet" href="jquery/jquery/jquery-ui.css">
+    <script src="jquery/jquery/jquery.js"></script>
+    <script src="jquery/jquery/jquery-ui.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#detalen").hide();
+            $("#base").show();
+            var tagoviZaKoristenje = [
+                "Titanic", "Focus", "The good doctor"
+            ];
+            $(".selectable").tooltip({
+                position: {
+                    my: "center bottom",
+                    at: "right top"
+                }
+            })
+
+            $(".bi-info-circle").tooltip({
+                position: {
+                    my: "center bottom",
+                    at: "center right"
+                }
+            })
+
+            $("#searchbox").autocomplete({
+                source: tagoviZaKoristenje
+
+            })
+
+            $("#show-after").hide()
+            $("#show-after1").hide()
+            $("#printbutton1").hide()
+
+            $("#searchbutton").click(function () {
+                if ($("#searchbox").val() === "") {
+                    alert("You must input a name")
+                } else {
+                    movie_name = $("#searchbox").val()
+                    console.log(movie_name)
+                    processData(movie_name)
+                    $("#show-after").show()
+                    $("#show-after1").show()
+                    $("#printbutton1").show()
+
+                }
+            })
+
+            function processData() {
+                $.ajax({
+                    url: "http://www.omdbapi.com/?t=" + movie_name + "&apikey=f11223a",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log("success")
+                        godinaNaIzdavanje = data.Year;
+
+                        $("#film2013").append("<li id='prvo' class='p-2' title='" + data.imdbRating + "'>" + data.Title + "</li>")
+                        $("#naslovDetalen").html(data.Title)
+                        $("#reziser").html(data.Director)
+                        $("#akteri").html(data.Actors)
+                        $("#imdb").html(data.imdbRating)
+                        $("#img").attr("src", data.Poster)
+
+
+                    }
+                })
+            }
+
+
+            $("#searchbox").keydown(function (event) {
+                if (event.which == 13) {
+                    if ($("#searchbox").val() === "") {
+                        alert("You must input a name")
+                    } else {
+                        movie_name = $("#searchbox").val()
+                        console.log(movie_name)
+                        processData(movie_name)
+                        $("#show-after").show()
+                        $("#show-after1").show()
+                        $("#printbutton1").show()
+
+                    }
+                }
+            })
+
+            $("#back").click(function () {
+                $("#detalen").hide();
+                $("#base").show()
+            })
+            $(document).on("click", "li", function () {
+                movie_name = $(this).html();
+                processData(movie_name);
+                $(this).remove();
+                $("#base").hide();
+                $("#detalen").show()
+                $("#printbutton1").hide()
+            })
+
+
+        })//za krajc
+    </script>
+    <style>
+        #searchbutton, #printbutton1, #printbuttonOnDetailed {
+            display: inline-block;
+            font-weight: 400;
+            line-height: 0.7;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            background-color: transparent;
+            padding: 0.55rem;
+            border-radius: 2px;
+            font-size: 1rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            color: #212529;
+            border-color: #212529;
+        }
+
+        #searchbutton:hover, #printbutton1:hover, #printbuttonOnDetailed:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .display-6.custom {
+            font-size: 24px;
+        }
+
+        .display-6 {
+            font-size: 32px;
+        }
+
+        li:hover {
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container p-2">
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-12">
+            <div class="p-2 flex-grow-1  justify-content-around">
+                <div id="base">
+                    <h3 class="display-6">
+                        Find a movie
+                        <svg title="Type a movie title, hit search, it will be displayed on a list, you can search multiple titles, they will be builded into a list and click any list item to get detailed information for the movie"
+                             xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-info-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                        </svg>
+                    </h3>
+                    <input type="text" id="searchbox">
+                    <p class="m-1"></p>
+
+                    <button class="btn btn-outline-secondary " id="searchbutton">Search</button>
+                    <hr>
+                    <div class="p-2">
+
+                    </div>
+                    <div id="2013">
+                        <ol id="film2013" class="selectable">
+
+                        </ol>
+                    </div>
+
+                    <hr id="show-after">
+
+                </div>
+                <button onclick="window.print()" class="btn btn-outline-secondary float-end" id="printbutton1">Print
+                    List
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-12 col-md-12">
+            <br>
+            <hr id="show-after1">
+            <div id="detalen">
+                <p class="display-6">Title: <span class="display-6 custom" id="naslovDetalen"></span></p>
+                <hr>
+                <p class="display-6">Reziser: <span class="display-6 custom" id="reziser"> </span></p>
+                <hr>
+                <p class="display-6">Actors: <span class="display-6 custom" id="akteri"></span></p>
+                <hr>
+                <p class="display-6">IMDB rating: <span class="display-6 custom" id="imdb"></span></p>
+                <hr>
+                <p class="display-6"><img id="img" src=""></p>
+
+                <button onclick="window.print()" class="btn btn-outline-secondary float-end" id="printbuttonOnDetailed">
+                    Print
+                    List
+                </button>
+                <button class="btn btn-outline-secondary " id="back">Go back to search</button>
+                <hr>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
